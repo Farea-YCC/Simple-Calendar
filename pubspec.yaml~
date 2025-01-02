@@ -15,7 +15,7 @@ dependencies:
   intl:
   hijri: ^3.0.0
   table_calendar: ^3.0.9
-  shared_preferences:
+  shared_preferences: 
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,23 @@
+{
+    "appTitle": "التقويم المزدوج",
+    "appTitleDetail": "تفاصيل الحدث",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "darkMode": "الوضع الداكن",
+    "lightMode": "الوضع الفاتح",
+    "system": "النظام",
+    "english": "English",
+    "arabic": "العربية",
+    "addEvent": "إضافة حدث",
+    "editEvent": "تعديل الحدث",
+    "deleteEvent": "حذف الحدث",
+    "eventTitle": "عنوان الحدث",
+    "eventDescription": "الوصف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirmDelete": "هل أنت متأكد من حذف هذا الحدث؟",
+    "gregorianCalendar": "التقويم الميلادي",
+    "hijriCalendar": "التقويم الهجري"
+}

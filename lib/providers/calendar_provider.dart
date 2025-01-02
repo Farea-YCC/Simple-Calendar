@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import '../models/calendar_event.dart';
+import '../models/calendar_type.dart';
+
+class CalendarProvider with ChangeNotifier {
+  CalendarType _currentCalendarType = CalendarType.gregorian;
+  final Map<DateTime, List<CalendarEvent>> _events = {};
+
+  CalendarType get currentCalendarType => _currentCalendarType;
+  Map<DateTime, List<CalendarEvent>> get events => _events;
+
+
+  void toggleCalendarType() {
+    _currentCalendarType = _currentCalendarType
+        == CalendarType.gregorian
+        ? CalendarType.hijri
+        : CalendarType.gregorian;
+    notifyListeners();
+  }
+
+  List<CalendarEvent> getEventsForDay(DateTime day) {
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    return _events[normalizedDay] ?? [];
+  }
+
+  void addEvent(CalendarEvent event) {
+    final normalizedDay = DateTime(
+      event.gregorianDate.year,
+      event.gregorianDate.month,
+      event.gregorianDate.day,
+    );
+    
+    if (_events[normalizedDay] != null) {
+      _events[normalizedDay]!.add(event);
+    } else {
+      _events[normalizedDay] = [event];
+    }
+    notifyListeners();
+  }
+
+  void removeEvent(CalendarEvent event) {
+    final normalizedDay = DateTime(
+      event.gregorianDate.year,
+      event.gregorianDate.month,
+      event.gregorianDate.day,
+    );
+    
+    if (_events[normalizedDay] != null) {
+      _events[normalizedDay]!.remove(event);
+      if (_events[normalizedDay]!.isEmpty) {
+        _events.remove(normalizedDay);
+      }
+      notifyListeners();
+    }
+  }
+
+  void updateEvent(CalendarEvent oldEvent, CalendarEvent newEvent) {
+    removeEvent(oldEvent);
+    addEvent(newEvent);
+  }
+}
