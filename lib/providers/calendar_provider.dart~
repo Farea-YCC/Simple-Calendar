@@ -3,7 +3,7 @@ import '../models/calendar_event.dart';
 import '../models/calendar_type.dart';
 
 class CalendarProvider with ChangeNotifier {
-  CalendarType _currentCalendarType = CalendarType.hijri;
+  CalendarType _currentCalendarType = CalendarType.gregorian;
   final Map<DateTime, List<CalendarEvent>> _events = {};
 
   CalendarType get currentCalendarType => _currentCalendarType;

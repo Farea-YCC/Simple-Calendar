@@ -7,7 +7,7 @@
     "darkMode": "الوضع الداكن",
     "lightMode": "الوضع الفاتح",
     "system": "النظام",
-    "english": "English",
+    "english": "انجليزي",
     "arabic": "العربية",
     "addEvent": "إضافة حدث",
     "editEvent": "تعديل الحدث",
@@ -19,5 +19,13 @@
     "delete": "حذف",
     "confirmDelete": "هل أنت متأكد من حذف هذا الحدث؟",
     "gregorianCalendar": "التقويم الميلادي",
-    "hijriCalendar": "التقويم الهجري"
+    "hijriCalendar": "التقويم الهجري",
+    "toggleCalendar"    : "تبديل التقويم",
+    "add": "إضافة",
+    "deleteEventSuccess": "تم حذف الحدث بنجاح",
+    "deleteEventFailure": "فشل حذف الحدث",
+    "addEventSuccess": "تم اضافة الحدث بنجاح",
+    "addEventFailure": "فشل اضافة الحدث",
+    "editEventSuccess": "تم تعديل الحدث بنجاح",
+    "editEventFailure": "فشل تعديل الحدث"
 }

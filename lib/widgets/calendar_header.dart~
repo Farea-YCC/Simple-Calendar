@@ -18,7 +18,7 @@ class CalendarHeader extends StatelessWidget {
       builder: (context, provider, child) {
         return AppBar(
           title: Text(
-            provider.currentCalendarType == CalendarType.gregorian ? l10n.gregorianCalendar :l10n.hijriCalendar,
+            provider.currentCalendarType == CalendarType.gregorian ? l10n.gregorianCalendar : 'Hijri Calendar',
           ),
           actions: [
             IconButton(

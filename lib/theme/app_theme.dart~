@@ -31,6 +31,8 @@ class AppTheme {
         ),
       ),
     ),
+    splashFactory: InkRipple.splashFactory,
+    splashColor: Colors.red.withOpacity(0.08),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -63,5 +65,7 @@ class AppTheme {
         ),
       ),
     ),
+    splashFactory: InkRipple.splashFactory,
+    splashColor: Colors.red.withOpacity(0.08),
   );
 }
