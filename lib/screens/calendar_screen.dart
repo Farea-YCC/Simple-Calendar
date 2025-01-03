@@ -1,15 +1,16 @@
 import 'package:dual_calendar/models/calendar_event.dart';
-import 'package:dual_calendar/models/calendar_type.dart';
-import 'package:dual_calendar/providers/calendar_provider.dart';
-import 'package:dual_calendar/screens/event_details_screen.dart';
-import 'package:dual_calendar/widgets/add_event_dialog.dart';
-import 'package:dual_calendar/widgets/app_drawer.dart';
-import 'package:dual_calendar/widgets/calendar_header.dart';
-import 'package:dual_calendar/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:hijri/hijri_calendar.dart';
+import '../providers/calendar_provider.dart';
+import '../models/calendar_type.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/calendar_header.dart';
+import '../widgets/event_card.dart';
+import '../widgets/add_event_dialog.dart';
+import '../screens/event_details_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -21,7 +22,6 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ln10 = AppLocalizations.of(context)!;
     return Consumer<CalendarProvider>(
       builder: (context, calendarProvider, child) {
         return Scaffold(
@@ -43,70 +44,131 @@ class _CalendarScreenState extends State<CalendarScreen> {
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: CalendarHeader(
               onToggleCalendarFormat: () {
-                calendarProvider.toggleCalendarType();
+                calendarProvider.toggleCalendarView();
               },
             ),
           ),
-          body: Column(
-            children: [
-              TableCalendar(
-                firstDay: DateTime.utc(2000, 1, 1),
-                lastDay: DateTime.utc(2050, 12, 31),
-                focusedDay: _focusedDay,
-                calendarFormat: _calendarFormat,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                eventLoader: (day) => calendarProvider.getEventsForDay(day),
-                calendarStyle: const CalendarStyle(
-                  markersMaxCount: 1,
-                  markerSize:8 ,
-                ),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                ),
-              ),
-              if (_selectedDay != null) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    calendarProvider.currentCalendarType ==
-                            CalendarType.gregorian
-                        ? _selectedDay!.toString().split(' ')[0]
-                        : _formatHijriDate(
-                            HijriCalendar.fromDate(_selectedDay!)),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(8.0),
-                    children: calendarProvider
-                        .getEventsForDay(_selectedDay!)
-                        .map((event) => EventCard(
-                              event: event,
-                              onDelete: () =>
-                                  calendarProvider.removeEvent(event),
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EventDetailsScreen(
-                                    event: event,
-                                    selectedDay: _selectedDay!,
-                                  ),
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              return SizedBox(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: constraints.maxHeight * 0.6,
+                      child: SingleChildScrollView(
+                        child: TableCalendar(
+                          locale: ln10.localeName,
+                          firstDay: DateTime.utc(2000, 1, 1),
+                          lastDay: DateTime.utc(2050, 12, 31),
+                          focusedDay: _focusedDay,
+                          calendarFormat: calendarProvider.isWeekView
+                              ? CalendarFormat.week
+                              : CalendarFormat.month,
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
+                          onDaySelected: (selectedDay, focusedDay) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                            });
+
+                            final events =
+                                calendarProvider.getEventsForDay(selectedDay);
+                            if (events.isNotEmpty) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16)),
                                 ),
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                                builder: (context) {
+                                  return SafeArea(
+                                    child: DraggableScrollableSheet(
+                                      expand: false,
+                                      initialChildSize: 0.5,
+                                      minChildSize: 0.3,
+                                      maxChildSize: 0.8,
+                                      builder: (context, scrollController) {
+                                        return ListView.builder(
+                                          controller: scrollController,
+                                          padding: const EdgeInsets.all(16),
+                                          itemCount: events.length,
+                                          itemBuilder: (context, index) {
+                                            final event = events[index];
+                                            return EventCard(
+                                              event: event,
+                                              onDelete: () {
+                                                calendarProvider
+                                                    .removeEvent(event);
+                                                setState(() {});
+                                                Navigator.pop(context);
+                                              },
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EventDetailsScreen(
+                                                    event: event,
+                                                    selectedDay: _selectedDay!,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          eventLoader: (day) =>
+                              calendarProvider.getEventsForDay(day),
+                          calendarStyle: const CalendarStyle(
+                            markersMaxCount: 1,
+                            markerSize: 8,
+                          ),
+                          headerStyle: const HeaderStyle(
+                            formatButtonVisible: false,
+                            titleCentered: true,
+                          ),
+                          onHeaderTapped: (day) async {
+                            DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: _focusedDay,
+                              firstDate: DateTime.utc(1999, 1, 1),
+                              lastDate: DateTime.utc(2030, 12, 31),
+                            );
+                            if (newDate != null) {
+                              setState(() {
+                                _focusedDay = newDate;
+                                _selectedDay = newDate;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    if (_selectedDay != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          calendarProvider.currentCalendarType ==
+                                  CalendarType.gregorian
+                              ? _selectedDay!.toString().split(' ')[0]
+                              : _formatHijriDate(
+                                  HijriCalendar.fromDate(_selectedDay!)),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ],
-            ],
+              );
+            },
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () async {
@@ -123,7 +185,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 }
               }
             },
-            label: const Text('Add Event'),
+            label: Text(ln10.addEvent),
             icon: const Icon(Icons.add),
           ),
         );

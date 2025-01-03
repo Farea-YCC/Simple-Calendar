@@ -1,3 +1,4 @@
+import 'package:dual_calendar/models/calendar_type.dart';
 import 'package:dual_calendar/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,94 +11,86 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!; // الترجمة
     final settings = Provider.of<SettingsProvider>(context);
-    return Consumer<CalendarProvider>(builder: (context, provider, child) {
-      return Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              child: Text(
-                l10n.appTitle,
-                style: const TextStyle(
-                  fontSize: 24,
+
+    return Consumer<CalendarProvider>(
+      builder: (context, provider, child) {
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Text(
+                  l10n.appTitle,
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.language),
-              title: Text(l10n.language),
-              trailing: DropdownButton<String>(
-                value: settings.locale.languageCode,
-                items: [
-                  DropdownMenuItem(
-                    value: 'en',
-                    child: Text(l10n.english),
-                  ),
-                  DropdownMenuItem(
-                    value: 'ar',
-                    child: Text(l10n.arabic),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    settings.setLocale(Locale(value));
-                  }
+              ListTile(
+                leading: const Icon(Icons.language),
+                title: Text(l10n.language),
+                trailing: DropdownButton<String>(
+                  value: settings.locale.languageCode,
+                  items: [
+                    DropdownMenuItem(
+                      value: 'en',
+                      child: Text(l10n.english),
+                    ),
+                    DropdownMenuItem(
+                      value: 'ar',
+                      child: Text(l10n.arabic),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      settings.setLocale(Locale(value));
+                    }
+                  },
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.brightness_6),
+                title: Text(l10n.theme),
+                trailing: DropdownButton<ThemeMode>(
+                  value: settings.themeMode,
+                  items: [
+                    DropdownMenuItem(
+                      value: ThemeMode.system,
+                      child: Text(l10n.system),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.light,
+                      child: Text(l10n.lightMode),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.dark,
+                      child: Text(l10n.darkMode),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      settings.setThemeMode(value);
+                    }
+                  },
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.calendar_today),
+               title: Text(l10n.toggleCalendar),
+                trailing: provider.currentCalendarType == CalendarType.gregorian
+                    ? const Icon(Icons.calendar_month)
+                    : const Icon(Icons.calendar_today),
+                onTap: () {
+                  provider.toggleCalendarType();
+                  Navigator.pop(context);
                 },
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.brightness_6),
-              title: Text(l10n.theme),
-              trailing: DropdownButton<ThemeMode>(
-                value: settings.themeMode,
-                items: [
-                  DropdownMenuItem(
-                    value: ThemeMode.system,
-                    child: Text(l10n.system),
-                  ),
-                  DropdownMenuItem(
-                    value: ThemeMode.light,
-                    child: Text(l10n.lightMode),
-                  ),
-                  DropdownMenuItem(
-                    value: ThemeMode.dark,
-                    child: Text(l10n.darkMode),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    settings.setThemeMode(value);
-                  }
-                },
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.calendar_month),
-              title: Text(l10n.gregorianCalendar),
-              trailing: DropdownButton<ThemeMode>(
-                value: settings.themeMode,
-                items: [
-                  DropdownMenuItem(
-                    value: ThemeMode.system,
-                    child: Text(l10n.system),
-                  ),
-                  DropdownMenuItem(
-                    value: ThemeMode.dark,
-                    child: Text(l10n.darkMode),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    settings.setThemeMode(value);
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 }

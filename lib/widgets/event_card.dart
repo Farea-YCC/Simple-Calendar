@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/calendar_event.dart';
+
 class EventCard extends StatelessWidget {
   final CalendarEvent event;
   final VoidCallback onDelete;
@@ -15,7 +16,6 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(

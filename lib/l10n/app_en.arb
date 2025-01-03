@@ -19,5 +19,13 @@
     "delete": "Delete",
     "confirmDelete": "Are you sure you want to delete this event?",
     "gregorianCalendar": "Gregorian Calendar",
-    "hijriCalendar": "Hijri Calendar"
+    "hijriCalendar": "Hijri Calendar",
+    "month": "Month",
+    "day": "Day",
+    "year": "Year",
+    "hour": "Hour",
+    "minute": "Minute",
+    "eventTitleRequired": "Event title is required",
+    "eventDescriptionRequired": "Event description is required",
+    "toggleCalendar": "Toggle Calendar"
 }

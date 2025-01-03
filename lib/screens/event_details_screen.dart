@@ -37,36 +37,10 @@ class EventDetailsScreen extends StatelessWidget {
               if (editedEvent != null && context.mounted) {
                 Provider.of<CalendarProvider>(context, listen: false)
                     .updateEvent(event, editedEvent);
-                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Event updated successfully')),
+                );
               }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Delete Event'),
-                  content:
-                      const Text('Are you sure you want to delete this event?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Provider.of<CalendarProvider>(context, listen: false)
-                            .removeEvent(event);
-                        Navigator.pop(context); // Close dialog
-                        Navigator.pop(context); // Close details screen
-                      },
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                ),
-              );
             },
           ),
         ],
@@ -88,18 +62,10 @@ class EventDetailsScreen extends StatelessWidget {
               height: 10,
               color: event.color,
             ),
-            const SizedBox(height: 8),
-            Card(
-              child: SizedBox(
-                width: double.infinity,
-                height: 80,
-                child: Center(
-                  child: Text(
-                    event.description,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              ),
+            const SizedBox(height: 16),
+            Text(
+              event.description,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
         ),
