@@ -48,12 +48,17 @@ class CalendarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove an event from the calendar
   void removeEvent(CalendarEvent event) {
     final normalizedDay = _normalizeDate(event.gregorianDate);
 
     if (_events[normalizedDay] != null) {
+<<<<<<< HEAD
       _events[normalizedDay]!.removeWhere((e) =>
           e.title == event.title && e.gregorianDate == event.gregorianDate);
+=======
+      _events[normalizedDay]!.remove(event);
+>>>>>>> f5144b191f04a66459aef768dfee283966415cf1
 
       if (_events[normalizedDay]!.isEmpty) {
         _events.remove(normalizedDay);
@@ -63,6 +68,7 @@ class CalendarProvider with ChangeNotifier {
     }
   }
 
+  // Update an existing event
   void updateEvent(CalendarEvent oldEvent, CalendarEvent newEvent) {
     removeEvent(oldEvent);
     addEvent(newEvent);

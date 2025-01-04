@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import '../models/calendar_event.dart';
 import '../models/calendar_type.dart';
 
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import '../models/calendar_type.dart';
 import '../models/calendar_event.dart';
+=======
+class CalendarProvider with ChangeNotifier {
+  CalendarType _currentCalendarType = CalendarType.gregorian;
+  final Map<DateTime, List<CalendarEvent>> _events = {};
+>>>>>>> f5144b191f04a66459aef768dfee283966415cf1
 
 class CalendarProvider with ChangeNotifier {
   CalendarType _currentCalendarType = CalendarType.gregorian;

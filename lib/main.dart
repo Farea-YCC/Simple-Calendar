@@ -1,5 +1,8 @@
 import 'package:device_preview/device_preview.dart';
+<<<<<<< HEAD
 import 'package:dual_calendar/splash/splash.dart';
+=======
+>>>>>>> f5144b191f04a66459aef768dfee283966415cf1
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
